@@ -4,6 +4,7 @@ jQueryを使用してIRISからJSONデータを取得するサンプルです
 サンプルには、次の内容が含まれます。
 
 ・REST + JSON
+
 ・REST + CORS
 
 ※それぞれ、$.getJSON と $.ajax で取得する方法を記載しています。
