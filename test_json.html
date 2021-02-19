@@ -1,0 +1,127 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <title>Sample.Personのデータ抽出</title>
+</head>
+<body>
+  <form name="searchform" method="get" action="">
+    <p>
+      抽出データのIDを入力してください<br />
+      <input type="text" name="keyword" value="" />
+    </p>
+
+    <p>
+      抽出データの名前の一部を入力してください(★専用)<br />
+      <input type="text" name="keyword2" value="" />
+    </p>
+
+    <table><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr></table>
+    </TD>
+    
+    <table><tr><td>
+      <h3>REST+JSON</h3>
+      <p><input type="button" name="call_getjson_rest" onclick="callgetjsonrest(this.form.keyword.value);" value="$.getJSON＋REST取得" /></p>
+      <p><input type="button" name="call_ajax_rest" onclick="callajaxrest(this.form.keyword.value);" value="$.ajax＋REST取得" /></p>
+      <p><input type="button" name="call_getjson_rest2" onclick="callgetjsonrest2(this.form.keyword2.value);" value="★$.ajax＋POST＋REST取得" /></p>
+
+      <hr>
+      <h3>REST+CORS</h3>
+      ※RESTディスパッチクラスでHandleCorsRequest パラメータまたは Cors 属性を指定する必要があります。<br>
+      <a href="http://docs.intersystems.com/irislatestj/csp/docbook/DocBook.UI.Page.cls?KEY=GREST_cors#GREST_cors_configure">CORS 使用のための REST サービスの構成</a>
+      <p><input type="button" name="call_getjson3" onclick="callgetjsonC(this.form.keyword.value);" value="$.getJSONで取得 - CORS" /></p>
+      <p><input type="button" name="call_ajax3" onclick="callajaxC(this.form.keyword.value);" value="$.ajaxで取得 - CORS" /></p>
+
+    </td></tr></table>
+  </form>
+  <div id="search_result">
+  <ul id="output"></ul>
+  </div>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.js"></script>
+<script type="text/javascript">
+
+// getJSON + JSON + REST + CORS
+// ※CORS対応の為、REST.Personクラスに 「Parameter HandleCorsRequest = 1;」 追加
+function callgetjsonC(keyword) {
+  var url = 'http://127.0.0.1:52773/csp/user/rest/persons/'+keyword;
+
+  // getJSONで情報を得る
+  $.getJSON(url, function(data) {
+       console.log(data);
+       for(var i in data){
+         $("#output").append("<li><strong>" + i + ":" + JSON.stringify(data[i]) + "</strong></li>");
+       }
+  });
+}
+
+// ajax + JSON + REST + CORS
+function callajaxC(keyword){
+ $.ajax({
+  type: 'GET',
+  url: 'http://127.0.0.1:52773/csp/user/rest/persons/'+keyword,
+  dataType: 'json',
+  success: function(data){
+    console.log(data);
+    for(var i in data){
+      $("#output").append("<li><strong>" + i + ":" + JSON.stringify(data[i]) + "</strong></li>");
+    }
+  },
+  error : function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log("ajax通信に失敗しました");
+        console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+        console.log("textStatus     : " + textStatus);
+        console.log("errorThrown    : " + errorThrown.message);
+     }
+ });
+}
+
+
+// REST + getJSON + JSON
+function callgetjsonrest(keyword){ 
+  var url = '/csp/user/rest/persons/'+keyword;
+
+  // getJSONで情報を得る
+  $.getJSON(url, function(data) {
+       //console.log(data);
+       for(var i in data){
+          $("#output").append("<li><strong>" + i + ":" + JSON.stringify(data[i]) + "</strong></li>");
+       }
+  });
+}
+
+// ★
+function callgetjsonrest2(keyword){ 
+
+ $.ajax({
+    type:'POST',
+    dataType:'json',
+    url:'/csp/user/rest/persons2/',
+    data:{"keyword":keyword},
+    success:function(data) {
+      	//console.log(data);
+       for(var i in data){
+       			$("#output").append("<li><strong>" + i+":"+JSON.stringify(data[i]) + "</strong></li>");
+       	}
+       }
+ });
+
+}
+
+// REST + ajax + JSON
+function callajaxrest(keyword){
+ $.ajax({
+    type:'GET',
+    dataType:'json',
+    url:'/csp/user/rest/persons/'+keyword,
+    success:function(data) {
+       //console.log(data);
+       for(var i in data){
+       			$("#output").append("<li><strong>" + i + ":" + JSON.stringify(data[i]) + "</strong></li>");
+       	}
+    }
+ });
+}
+
+</script>
+</body>
+</html>
