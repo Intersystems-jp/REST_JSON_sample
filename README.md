@@ -1,6 +1,21 @@
 # REST_JSON_sample
 jQueryを使用してIRISからJSONデータを取得するサンプルです
 
+サンプルには、次の内容が含まれます。
+
+・REST + JSON
+・REST + CORS
+
+※それぞれ、$.getJSON と $.ajax で取得する方法を記載しています。
+
+※サーバ側ではSelect文の実行結果をJSON_OBJECT関数を使用しJSON文字列で出力しています。
+
+　関数については以下のドキュメントをご覧ください。
+ 
+　https://docs.intersystems.com/irislatestj/csp/docbook/DocBook.UI.Page.cls?KEY=RSQL_jsonobject
+
+========
+
 使用手順は以下になります。
 
 <b>1. USERネームスペースにjson.xmlをインポート・コンパイル</b>
